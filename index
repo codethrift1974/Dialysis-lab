@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Biology Lab: Selective Permeability &amp; Dialysis Tubing</title>
+  <style>
+    :root {
+      --bg-page: #f4f6f9;
+      --bg-card: #ffffff;
+      --bg-subtle: #eef2f6;
+      --text-main: #1a2230;
+      --text-muted: #4a5568;
+      --border-color: #cbd5e1;
+      --primary: #1d4ed8;
+      --primary-hover: #1e40af;
+      --primary-light: #dbeafe;
+      --success: #15803d;
+      --success-light: #dcfce7;
+      --warning: #b45309;
+      --warning-light: #fef3c7;
+      --danger: #b91c1c;
+      --danger-light: #fee2e2;
+      --focus-ring: #2563eb;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --radius: 10px;
+      --base-font-size: 16px;
+    }
+
+    body.high-contrast {
+      --bg-page: #000000;
+      --bg-card: #0a0a0a;
+      --bg-subtle: #171717;
+      --text-main: #ffffff;
+      --text-muted: #e5e7eb;
+      --border-color: #ffffff;
+      --primary: #ffdd00;
+      --primary-hover: #ffe84d;
+      --primary-light: #262200;
+      --success: #4ade80;
+      --success-light: #052e16;
+      --warning: #fbbf24;
+      --warning-light: #271a00;
+      --danger: #f87171;
+      --danger-light: #2b0909;
+      --focus-ring: #ffdd00;
+      --shadow-sm: none;
+      --shadow-md: none;
+    }
+
+    body.high-contrast .btn-primary {
+      color: #000000;
+      font-weight: 800;
+    }
+
+    html {
+      font-size: var(--base-font-size);
+      scroll-behavior: smooth;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    /* Accessibility Focus */
+    :focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Header & Utility Toolbar */
+    header {
+      background: var(--bg-card);
+      border-bottom: 2px solid var(--border-color);
+      padding: 0.85rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 0.2rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tool-group {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.2rem;
+      gap: 0.2rem;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-height: 44px;
+      padding: 0.45rem 0.85rem;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      transition: background-color 0.15s, border-color 0.15s, transform 0.08s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--bg-subtle);
+      border-color: var(--primary);
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .tool-group button {
+      min-height: 36px;
+      padding: 0.25rem 0.6rem;
+      border: none;
+      background: transparent;
+    }
+
+    .tool-group button.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    body.high-contrast .tool-group button.active {
+      color: #000000;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #ffffff;
+      border-color: var(--success);
+    }
+
+    body.high-contrast .btn-success {
+      color: #000000;
+    }
+
+    .btn-danger {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: var(--danger-light);
+    }
+
+    /* Guided Mode Banner */
+    .guided-banner {
+      max-width: 1440px;
+      margin: 0.75rem auto 0;
+      padding: 0.75rem 1.25rem;
+      background: var(--warning-light);
+      border: 2px solid var(--warning);
+      border-radius: var(--radius);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    body.guided-mode .guided-banner {
+      display: flex;
+    }
+
+    .guided-step-highlight {
+      outline: 3px dashed var(--warning) !important;
+      outline-offset: 4px;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1440px;
+      margin: 1rem auto 2.5rem;
+      padding: 0 1.25rem;
+    }
+
+    /* Progress Tracker Strip */
+    .progress-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      margin-bottom: 0.65rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .step-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .step-pill {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .step-pill.done {
+      background: var(--success-light);
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    /* Workspace Grid */
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(340px, 460px) 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .card h3 {
+      margin: 1rem 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    /* Visual Lab Bench */
+    .lab-bench-card {
+      position: sticky;
+      top: 5.2rem;
+    }
+
+    @media (max-width: 980px) {
+      .lab-bench-card {
+        position: static;
+      }
+    }
+
+    .svg-stage {
+      width: 100%;
+      background: linear-gradient(180deg, #e2e8f0 0%, #f8fafc 78%, #cbd5e1 78%, #94a3b8 100%);
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body.high-contrast .svg-stage {
+      background: #111111;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .stat-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem 0.65rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: block;
+    }
+
+    .stat-value {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Test Strip Visual Comparison */
+    .strip-station {
+      margin-top: 0.75rem;
+      padding: 0.65rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .strip-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .glucose-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #94a3b8;
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .strip-pad {
+      width: 22px;
+      height: 16px;
+      border-radius: 2px;
+      border: 1px solid #475569;
+      display: inline-block;
+    }
+
+    .color-legend {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+      font-size: 0.72rem;
+    }
+
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+    }
+
+    /* Navigation Tabs */
+    .tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.65rem;
+    }
+
+    .tab-btn {
+      flex: 1 1 auto;
+      min-width: 135px;
+      background: var(--bg-subtle);
+    }
+
+    .tab-btn[aria-selected="true"] {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    body.high-contrast .tab-btn[aria-selected="true"] {
+      color: #000000;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Forms, Sliders, Inputs */
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 0.85rem;
+      margin: 0.75rem 0;
+    }
+
+    .control-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+
+    .control-box label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 32px;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    select, input[type="text"], input[type="password"], textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.92rem;
+      padding: 0.55rem 0.65rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-card);
+      color: var(--text-main);
+      min-height: 44px;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: 44px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0.75rem 0;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 0.7rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-subtle);
+      font-weight: 700;
+    }
+
+    .pred-group {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .pred-btn {
+      min-height: 38px;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.85rem;
+    }
+
+    .pred-btn.selected {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    body.high-contrast .pred-btn.selected {
+      color: #000000;
+    }
+
+    /* Procedure Action List */
+    .proc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .proc-step {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem;
+      background: var(--bg-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .proc-step.completed {
+      border-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .proc-step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .proc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Vocabulary Tooltips */
+    .vocab-tip {
+      display: inline;
+      padding: 0 0.2rem;
+      min-height: auto;
+      border: none;
+      border-bottom: 2px dotted var(--primary);
+      border-radius: 2px;
+      background: transparent;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: inherit;
+      position: relative;
+    }
+
+    .tooltip-popover {
+      position: fixed;
+      z-index: 100;
+      max-width: 310px;
+      background: var(--text-main);
+      color: var(--bg-card);
+      padding: 0.65rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-md);
+      pointer-events: none;
+      display: none;
+    }
+
+    /* Graph Canvas */
+    .graph-container {
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Hints & Analysis Questions */
+    .question-box {
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem;
+      margin-bottom: 0.85rem;
+      background: var(--bg-subtle);
+    }
+
+    .dok-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .hint-box {
+      margin-top: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      background: var(--warning-light);
+      border-left: 4px solid var(--warning);
+      border-radius: 4px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .hint-box.visible {
+      display: block;
+    }
+
+    .sentence-starter {
+      display: none;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin: 0.35rem 0;
+    }
+
+    body.guided-mode .sentence-starter {
+      display: block;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 80;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      max-width: 780px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .alert-inline {
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin: 0.5rem 0;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subtle);
+    }
+
+    .alert-inline.info {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .alert-inline.warn {
+      background: var(--warning-light);
+      border-color: var(--warning);
+    }
+
+    @media print {
+      header, .toolbar, .guided-banner, .tab-bar, button, .no-print {
+        display: none !important;
+      }
+      .workspace {
+        display: block;
+      }
+      .tab-panel {
+        display: block !important;
+        margin-bottom: 1.5rem;
+      }
+      .card {
+        border: 1px solid #000;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand-title">
+        <span class="brand-badge">General Biology / Life Science • Virtual Make-Up Lab</span>
+        <h1>Investigating Selective Permeability using Dialysis Tubing</h1>
+      </div>
+
+      <div class="toolbar" role="toolbar" aria-label="Accessibility and Lab Controls">
+        <div class="tool-group" role="group" aria-label="Text Size">
+          <button type="button" id="font-sm" aria-label="Small text size">A-</button>
+          <button type="button" id="font-md" class="active" aria-label="Normal text size">A</button>
+          <button type="button" id="font-lg" aria-label="Large text size">A+</button>
+        </div>
+
+        <button type="button" id="btn-contrast" aria-pressed="false">High Contrast</button>
+        <button type="button" id="btn-guided" aria-pressed="false">Guided Mode</button>
+        <button type="button" id="btn-glossary">Vocab Glossary</button>
+        <button type="button" id="btn-teacher">Teacher Key</button>
+        <button type="button" id="btn-reset" class="btn-danger">Reset Lab</button>
+      </div>
+    </div>
+
+    <div class="guided-banner" role="region" aria-label="Step-by-step guided prompt">
+      <div>
+        <strong>Guided Mode Active — Next Step:</strong>
+        <span id="guided-prompt-text">Complete the Pre-Lab Predictions table for Water, Iodine, Glucose, and Starch.</span>
+      </div>
+      <button type="button" id="btn-guided-jump" class="btn-primary">Go to Step</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Live Screen Reader Announcement Region -->
+    <div id="sr-announcer" class="sr-only" aria-live="polite"></div>
+
+    <!-- Progress Tracker -->
+    <section class="progress-card" aria-label="Lab Completion Progress">
+      <div class="progress-header">
+        <div>
+          <strong>Lab Procedure Progress:</strong>
+          <span id="progress-summary">0 of 7 Milestones Completed (0%)</span>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+          Student Session ID: <strong id="session-seed-display">---</strong>
+        </div>
+      </div>
+      <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="step-pills" id="step-pills">
+        <span class="step-pill" data-step="predictions">1. Pre-Lab Predictions</span>
+        <span class="step-pill" data-step="beakerSetup">2. Beaker &amp; Iodine Setup</span>
+        <span class="step-pill" data-step="baselineTest">3. Baseline Glucose Test</span>
+        <span class="step-pill" data-step="bagSetup">4. Dialysis Bag &amp; Rinse</span>
+        <span class="step-pill" data-step="incubate">5. 20-Min Incubation</span>
+        <span class="step-pill" data-step="finalTest">6. Final Observation &amp; Test</span>
+        <span class="step-pill" data-step="analysis">7. Analysis Questions</span>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <!-- LEFT COLUMN: Interactive Visual Lab Bench -->
+      <section class="card lab-bench-card" aria-label="Interactive Virtual Lab Apparatus">
+        <h2>
+          <span>Virtual Lab Bench</span>
+          <button type="button" id="btn-pore-view" aria-pressed="false" style="min-height: 36px; font-size: 0.8rem;">
+            Pore Magnifier: OFF
+          </button>
+        </h2>
+
+        <div class="svg-stage">
+          <svg id="lab-svg" viewBox="0 0 420 340" role="img" aria-label="250 mL beaker containing amber iodine solution and submerged dialysis tubing bag filled with starch and glucose">
+            <defs>
+              <clipPath id="beaker-clip">
+                <rect x="115" y="95" width="190" height="205" rx="8" />
+              </clipPath>
+              <clipPath id="bag-clip">
+                <path d="M180,145 C170,175 170,245 182,272 C192,282 228,282 238,272 C250,245 250,175 240,145 Z" />
+              </clipPath>
+            </defs>
+
+            <!-- Lab Bench Surface -->
+            <rect x="0" y="295" width="420" height="45" fill="#94a3b8" />
+            <line x1="0" y1="295" x2="420" y2="295" stroke="#475569" stroke-width="2" />
+
+            <!-- Support Rod / String Holder -->
+            <rect x="65" y="30" width="12" height="265" rx="3" fill="#475569" />
+            <rect x="45" y="285" width="52" height="12" rx="3" fill="#334155" />
+            <line x1="71" y1="45" x2="210" y2="45" stroke="#64748b" stroke-width="4" stroke-linecap="round" />
+
+            <!-- Beaker Liquid -->
+            <g clip-path="url(#beaker-clip)">
+              <rect id="svg-beaker-liquid" x="115" y="130" width="190" height="175" fill="#e0f2fe" opacity="0.85" />
+              <!-- Meniscus -->
+              <ellipse id="svg-beaker-meniscus" cx="210" cy="130" rx="95" ry="6" fill="#bae6fd" opacity="0.7" />
+              <!-- Animated Molecules Layer (Beaker) -->
+              <g id="svg-molecules-beaker"></g>
+            </g>
+
+            <!-- Dialysis Tubing Assembly (Moves down when submerged) -->
+            <g id="svg-bag-assembly" transform="translate(0, -85)">
+              <!-- Suspension String -->
+              <line x1="210" y1="45" x2="210" y2="132" stroke="#cbd5e1" stroke-width="2.5" stroke-dasharray="4 2" />
+              <!-- Top Tie String -->
+              <path d="M192,136 Q210,142 228,136" stroke="#dc2626" stroke-width="3.5" fill="none" />
+              <line x1="210" y1="138" x2="200" y2="128" stroke="#dc2626" stroke-width="2" />
+              <line x1="210" y1="138" x2="220" y2="128" stroke="#dc2626" stroke-width="2" />
+
+              <!-- Dialysis Bag Body -->
+              <path id="svg-bag-fill" d="M180,145 C170,175 170,245 182,272 C192,282 228,282 238,272 C250,245 250,175 240,145 Z"
+                    fill="#f8fafc" fill-opacity="0.92" stroke="#64748b" stroke-width="2.5" stroke-dasharray="5 3" />
+
+              <!-- Animated Molecules Inside Bag -->
+              <g clip-path="url(#bag-clip)" id="svg-molecules-bag"></g>
+
+              <!-- Bottom Tie String -->
+              <path d="M192,277 Q210,271 228,277" stroke="#dc2626" stroke-width="3.5" fill="none" />
+              <text x="210" y="212" text-anchor="middle" font-size="11" font-weight="700" fill="#334155" id="svg-bag-label">
+                Empty Bag
+              </text>
+            </g>
+
+            <!-- 250 mL Beaker Glass Outline & Graduations -->
+            <path d="M110,85 L115,95 L115,292 Q115,300 123,300 L297,300 Q305,300 305,292 L305,95 L310,85"
+                  fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linejoin="round" />
+            <!-- Volume Markings -->
+            <g stroke="#334155" stroke-width="1.5" font-size="10" fill="#334155" font-weight="700">
+              <line x1="122" y1="130" x2="136" y2="130" />
+              <text x="140" y="133">200 mL</text>
+              <line x1="122" y1="172" x2="140" y2="172" />
+              <text x="144" y="175">150 mL</text>
+              <line x1="122" y1="215" x2="136" y2="215" />
+              <text x="140" y="218">100 mL</text>
+              <line x1="122" y1="258" x2="136" y2="258" />
+              <text x="140" y="261">50 mL</text>
+            </g>
+
+            <!-- Eye Dropper / Pipette -->
+            <g id="svg-pipette" transform="translate(335, 65)">
+              <rect x="8" y="0" width="14" height="24" rx="7" fill="#dc2626" />
+              <polygon points="10,24 20,24 17,75 13,75" fill="#e2e8f0" stroke="#475569" stroke-width="1.5" />
+              <circle id="svg-pipette-drop" cx="15" cy="83" r="0" fill="#fbbf24" />
+              <text x="15" y="102" text-anchor="middle" font-size="10" font-weight="700" fill="#1e293b">Dropper</text>
+            </g>
+
+            <!-- Microscopic Pore Magnifier Inset (Toggleable) -->
+            <g id="svg-pore-inset" style="display: none;">
+              <rect x="248" y="12" width="162" height="106" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+              <text x="329" y="28" text-anchor="middle" font-size="10" font-weight="700" fill="#38bdf8">
+                Membrane Pore View
+              </text>
+              <!-- Semi-permeable wall with pores -->
+              <line x1="329" y1="35" x2="329" y2="50" stroke="#94a3b8" stroke-width="4" />
+              <line x1="329" y1="64" x2="329" y2="82" stroke="#94a3b8" stroke-width="4" />
+              <line x1="329" y1="96" x2="329" y2="110" stroke="#94a3b8" stroke-width="4" />
+              <!-- Small molecules passing -->
+              <circle cx="312" cy="57" r="4" fill="#fbbf24" />
+              <text x="275" y="60" font-size="9" fill="#fde047">I₂ passes →</text>
+              <circle cx="346" cy="89" r="5" fill="#4ade80" />
+              <text x="336" y="80" font-size="9" fill="#86efac">← C₆H₁₂O₆</text>
+              <!-- Large starch blocked -->
+              <path d="M352,45 Q362,38 370,46 Q378,54 388,45 Q396,38 402,48" fill="none" stroke="#f472b6" stroke-width="4" />
+              <text x="342" y="62" font-size="8.5" fill="#f9a8d4">Starch blocked</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Live Quantitative & Qualitative Sensor Readouts -->
+        <div class="status-grid">
+          <div class="stat-box">
+            <span class="stat-label">Incubation Timer</span>
+            <span class="stat-value" id="readout-time">00:00 / 20:00 min</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Dialysis Bag Mass</span>
+            <span class="stat-value" id="readout-mass">Not assembled</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Inside Bag Appearance</span>
+            <span class="stat-value" id="readout-bag-color">Empty</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Beaker Liquid Appearance</span>
+            <span class="stat-value" id="readout-beaker-color">Empty</span>
+          </div>
+        </div>
+
+        <!-- Glucose Test Strip Station -->
+        <div class="strip-station" aria-label="Glucose Test Strip Comparison">
+          <div style="font-size: 0.85rem; font-weight: 700;">Glucose Test Strips (Eye Dropper Samples):</div>
+          <div class="strip-row">
+            <div class="glucose-strip" id="strip-initial-card">
+              <span class="strip-pad" id="strip-initial-pad" style="background: #cbd5e1;"></span>
+              <span id="strip-initial-text">Initial: Untested</span>
+            </div>
+            <div class="glucose-strip" id="strip-final-card">
+              <span class="strip-pad" id="strip-final-pad" style="background: #cbd5e1;"></span>
+              <span id="strip-final-text">Final: Untested</span>
+            </div>
+          </div>
+          <div class="color-legend" aria-label="Glucose Test Strip Reference Chart">
+            <span class="legend-chip"><span style="width:10px;height:10px;background:#0ea5e9;display:inline-block;"></span> 0 mg/dL (Neg)</span>
+            <span class="legend-chip"><span style="width:10px;height:10px;background:#22c55e;display:inline-block;"></span> 100 mg/dL</span>
+            <span class="legend-chip"><span style="width:10px;height:10px;background:#84cc16;display:inline-block;"></span> 250 mg/dL</span>
+            <span class="legend-chip"><span style="width:10px;height:10px;background:#a16207;display:inline-block;"></span> 500+ mg/dL (Pos)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: Lab Notebook Tabs -->
+      <section class="card" aria-label="Lab Notebook and Controls">
+        <div class="tab-bar" role="tablist">
+          <button type="button" class="tab-btn" role="tab" id="tab-btn-1" aria-selected="true" aria-controls="panel-1">
+            1. Pre-Lab &amp; Setup
+          </button>
+          <button type="button" class="tab-btn" role="tab" id="tab-btn-2" aria-selected="false" aria-controls="panel-2">
+            2. Run Procedure
+          </button>
+          <button type="button" class="tab-btn" role="tab" id="tab-btn-3" aria-selected="false" aria-controls="panel-3">
+            3. Data &amp; Graph
+          </button>
+          <button type="button" class="tab-btn" role="tab" id="tab-btn-4" aria-selected="false" aria-controls="panel-4">
+            4. Hints &amp; Analysis
+          </button>
+        </div>
+
+        <!-- TAB 1: PRE-LAB PREDICTIONS & EXPERIMENTAL PARAMETERS -->
+        <div id="panel-1" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-1">
+          <h2>Background &amp; Pre-Lab Predictions</h2>
+          <p style="font-size: 0.94rem; margin-top: 0;">
+            Dialysis tubing acts as a
+            <button type="button" class="vocab-tip" data-term="selectively permeable">selectively permeable</button>
+            membrane model. Molecules move via
+            <button type="button" class="vocab-tip" data-term="passive diffusion">passive diffusion</button>
+            down a
+            <button type="button" class="vocab-tip" data-term="concentration gradient">concentration gradient</button>
+            without using cellular energy. Based on molecular formulas and size, predict which substances can cross the membrane pores:
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Substance</th>
+                  <th>Chemical Formula</th>
+                  <th>Relative Molecular Size</th>
+                  <th>Predicted Permeability (Select One)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Water</strong></td>
+                  <td>H<sub>2</sub>O</td>
+                  <td>Very small (3 atoms)</td>
+                  <td>
+                    <div class="pred-group" role="group" aria-label="Prediction for Water">
+                      <button type="button" class="pred-btn" data-sub="water" data-val="Can Pass">Can Pass</button>
+                      <button type="button" class="pred-btn" data-sub="water" data-val="Too Large">Too Large</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Iodine</strong></td>
+                  <td>I<sub>2</sub></td>
+                  <td>Small <button type="button" class="vocab-tip" data-term="diatomic">diatomic</button> molecule (2 atoms)</td>
+                  <td>
+                    <div class="pred-group" role="group" aria-label="Prediction for Iodine">
+                      <button type="button" class="pred-btn" data-sub="iodine" data-val="Can Pass">Can Pass</button>
+                      <button type="button" class="pred-btn" data-sub="iodine" data-val="Too Large">Too Large</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Glucose</strong></td>
+                  <td>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub></td>
+                  <td>Small <button type="button" class="vocab-tip" data-term="monosaccharide">monosaccharide</button> sugar (24 atoms)</td>
+                  <td>
+                    <div class="pred-group" role="group" aria-label="Prediction for Glucose">
+                      <button type="button" class="pred-btn" data-sub="glucose" data-val="Can Pass">Can Pass</button>
+                      <button type="button" class="pred-btn" data-sub="glucose" data-val="Too Large">Too Large</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Starch</strong></td>
+                  <td>C<sub>300</sub>H<sub>520</sub>O<sub>260</sub></td>
+                  <td>Large <button type="button" class="vocab-tip" data-term="polysaccharide">polysaccharide</button> macromolecule (~1,080+ atoms)</td>
+                  <td>
+                    <div class="pred-group" role="group" aria-label="Prediction for Starch">
+                      <button type="button" class="pred-btn" data-sub="starch" data-val="Can Pass">Can Pass</button>
+                      <button type="button" class="pred-btn" data-sub="starch" data-val="Too Large">Too Large</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Adjust Experimental Parameters (Independent Variables)</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0;">
+            Standard handout settings are pre-loaded. You may adjust reagent concentrations or incubation time to explore how gradients and duration affect diffusion.
+          </p>
+
+          <div class="control-grid">
+            <div class="control-box">
+              <label for="slider-iodine">
+                <span>Lugol's Iodine Drops (Beaker)</span>
+                <span id="val-iodine">11 drops</span>
+              </label>
+              <input type="range" id="slider-iodine" min="6" max="15" step="1" value="11" />
+              <small style="color: var(--text-muted);">Handout standard: 10–12 drops in 150 mL H₂O</small>
+            </div>
+
+            <div class="control-box">
+              <label for="slider-glucose">
+                <span>Initial Bag Glucose (%)</span>
+                <span id="val-glucose">12.5%</span>
+              </label>
+              <input type="range" id="slider-glucose" min="5" max="20" step="0.5" value="12.5" />
+              <small style="color: var(--text-muted);">Handout standard: 5 mL of 10–15% glucose</small>
+            </div>
+
+            <div class="control-box">
+              <label for="slider-starch">
+                <span>Initial Bag Starch (%)</span>
+                <span id="val-starch">1.5%</span>
+              </label>
+              <input type="range" id="slider-starch" min="0.5" max="3.0" step="0.5" value="1.5" />
+              <small style="color: var(--text-muted);">Handout standard: 5 mL of 1–2% starch</small>
+            </div>
+
+            <div class="control-box">
+              <label for="slider-duration">
+                <span>Target Incubation Time</span>
+                <span id="val-duration">20 min</span>
+              </label>
+              <input type="range" id="slider-duration" min="5" max="30" step="5" value="20" />
+              <small style="color: var(--text-muted);">Handout standard: 20-minute incubation</small>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 0.75rem;">
+            <button type="button" class="btn-primary" id="btn-to-procedure">
+              Continue to Step 2: Experimental Procedure →
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 2: EXPERIMENTAL PROCEDURE -->
+        <div id="panel-2" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-2">
+          <h2>Experimental Procedure (Handout Section 7)</h2>
+
+          <div class="proc-list">
+            <!-- Step 1 -->
+            <div class="proc-step" id="proc-card-1">
+              <div class="proc-step-header">
+                <strong>Step 1: Set Up External Environment (250 mL Beaker)</strong>
+                <span id="badge-step-1" style="font-size: 0.8rem; font-weight: 700;">Pending</span>
+              </div>
+              <p style="margin: 0; font-size: 0.9rem;">
+                Pour 150 mL distilled water into the beaker, add <strong id="proc-iodine-count">11</strong> drops of Lugol's iodine, swirl until pale amber/yellow, and test a baseline drop on a glucose strip.
+              </p>
+              <div class="proc-actions">
+                <button type="button" id="btn-step1-beaker" class="btn-primary">
+                  1A. Fill Beaker &amp; Add Iodine
+                </button>
+                <button type="button" id="btn-step1-strip" disabled>
+                  1B. Sample Baseline Glucose Strip
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="proc-step" id="proc-card-2">
+              <div class="proc-step-header">
+                <strong>Step 2: Assemble Internal Environment (Dialysis Bag)</strong>
+                <span id="badge-step-2" style="font-size: 0.8rem; font-weight: 700;">Pending</span>
+              </div>
+              <p style="margin: 0; font-size: 0.9rem;">
+                Tie one end of pre-soaked 15 cm dialysis tubing, add 5 mL starch + 5 mL glucose, tie top end with small air gap, and rinse the outside under distilled water.
+              </p>
+              <label class="checkbox-row">
+                <input type="checkbox" id="chk-rinse" checked />
+                <span>Rinse exterior of tied dialysis bag with distilled water (prevents surface contamination)</span>
+              </label>
+              <div class="proc-actions">
+                <button type="button" id="btn-step2-bag" class="btn-primary">
+                  2. Fill, Tie &amp; Prepare Dialysis Bag
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="proc-step" id="proc-card-3">
+              <div class="proc-step-header">
+                <strong>Step 3: Initiate Incubation</strong>
+                <span id="badge-step-3" style="font-size: 0.8rem; font-weight: 700;">Pending</span>
+              </div>
+              <p style="margin: 0; font-size: 0.9rem;">
+                Submerge the dialysis bag completely into the amber iodine solution and run the incubation timer.
+              </p>
+              <div class="proc-actions">
+                <button type="button" id="btn-step3-submerge" class="btn-primary" disabled>
+                  3A. Submerge Bag in Beaker
+                </button>
+                <button type="button" id="btn-step3-run" class="btn-success" disabled>
+                  3B. Run Incubation Timer (20 min)
+                </button>
+                <button type="button" id="btn-step3-snapshot" disabled>
+                  Record Time-Point Snapshot to Table
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="proc-step" id="proc-card-4">
+              <div class="proc-step-header">
+                <strong>Step 4: Post-Incubation Observation &amp; Testing</strong>
+                <span id="badge-step-4" style="font-size: 0.8rem; font-weight: 700;">Pending</span>
+              </div>
+              <p style="margin: 0; font-size: 0.9rem;">
+                Lift the bag out of the beaker, observe color changes inside the bag and in the beaker, and test a drop from the bottom of the beaker on a new glucose test strip.
+              </p>
+              <div class="proc-actions">
+                <button type="button" id="btn-step4-test" class="btn-primary" disabled>
+                  4. Lift Bag &amp; Test Final Beaker Glucose
+                </button>
+                <button type="button" id="btn-to-data" disabled>
+                  View Data Table &amp; Graph →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: DATA COLLECTION TABLE, QUANTITATIVE CALCULATIONS & GRAPH -->
+        <div id="panel-3" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-3">
+          <h2>Student Data Collection Table (Handout Section 8)</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0;">
+            Observations auto-populate from your simulation runs. Select the matching permeability inference for each row based on your evidence.
+          </p>
+
+          <div class="table-wrap">
+            <table id="handout-data-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">Location / Test Sample</th>
+                  <th style="width: 24%;">Initial Observations</th>
+                  <th style="width: 26%;">Final Observations</th>
+                  <th style="width: 28%;">Evidence of Molecule Movement / Permeability Inferences</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Inside Dialysis Bag (Color)</strong></td>
+                  <td id="dt-bag-init">—</td>
+                  <td id="dt-bag-final">—</td>
+                  <td>
+                    <label for="inf-bag" class="sr-only">Permeability inference inside dialysis bag</label>
+                    <select id="inf-bag">
+                      <option value="">-- Select Inference --</option>
+                      <option value="iodine_in">Iodine (I₂) diffused INTO the bag and reacted with starch (blue-black); Iodine can pass.</option>
+                      <option value="starch_out">Starch diffused OUT of the bag into the beaker.</option>
+                      <option value="none">No molecules entered or left the dialysis bag.</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Beaker Liquid (Color)</strong></td>
+                  <td id="dt-beaker-init">—</td>
+                  <td id="dt-beaker-final">—</td>
+                  <td>
+                    <label for="inf-beaker" class="sr-only">Permeability inference for beaker liquid color</label>
+                    <select id="inf-beaker">
+                      <option value="">-- Select Inference --</option>
+                      <option value="starch_blocked">Beaker did NOT turn blue-black; Starch (C₃₀₀H₅₂₀O₂₆₀) is too large to exit the bag.</option>
+                      <option value="iodine_blocked">Iodine was too large to enter the dialysis bag.</option>
+                      <option value="starch_passed">Starch diffused into the beaker and turned it clear.</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Beaker Liquid Glucose Test (Eye Dropper Sample)</strong></td>
+                  <td id="dt-gluc-init">—</td>
+                  <td id="dt-gluc-final">—</td>
+                  <td>
+                    <label for="inf-gluc" class="sr-only">Permeability inference for glucose test</label>
+                    <select id="inf-gluc">
+                      <option value="">-- Select Inference --</option>
+                      <option value="glucose_out">Glucose (C₆H₁₂O₆) diffused OUT of the bag into the beaker; Glucose can pass.</option>
+                      <option value="glucose_blocked">Glucose was too large to cross the membrane.</option>
+                      <option value="water_only">Only water crossed the membrane; glucose stayed inside.</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Quantitative Measurements &amp; Diffusion Rate Log</h3>
+          <div class="table-wrap">
+            <table id="quant-table">
+              <thead>
+                <tr>
+                  <th>Time Point (min)</th>
+                  <th>Beaker Glucose (mg/dL)</th>
+                  <th>Glucose Diffusion Rate (mg/dL/min)</th>
+                  <th>Bag Color Intensity (%)</th>
+                  <th>Bag Mass (g) &amp; Osmotic Δg</th>
+                </tr>
+              </thead>
+              <tbody id="quant-tbody">
+                <tr>
+                  <td colspan="5" style="text-align: center; color: var(--text-muted);">
+                    Run the procedure in Tab 2 to generate timestamped quantitative data.
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot id="quant-tfoot" style="background: var(--bg-subtle); font-weight: 700;"></tfoot>
+            </table>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+            <h3 style="margin: 0;">Diffusion Kinetics Graph</h3>
+            <button type="button" id="btn-download-graph" class="btn-primary">
+              Download Graph (PNG)
+            </button>
+          </div>
+
+          <div class="graph-container">
+            <canvas id="diffusion-canvas" width="760" height="360" aria-label="Graph showing Beaker Glucose concentration and Bag Iodine-Starch color intensity over 20 minutes"></canvas>
+          </div>
+        </div>
+
+        <!-- TAB 4: HINTS, CHECK MY UNDERSTANDING & POST-LAB ANALYSIS -->
+        <div id="panel-4" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-4">
+          <h2>Check My Understanding &amp; Post-Lab Analysis (Section 9)</h2>
+
+          <!-- Quick DOK 1-2 Concept Check -->
+          <div class="question-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <strong>Quick Concept Check (DOK 2 — Apply &amp; Interpret)</strong>
+              <span class="dok-badge">DOK 2</span>
+            </div>
+            <p style="font-size: 0.9rem; margin: 0.4rem 0;">
+              If a student accidentally poked a tiny pinhole in the dialysis tubing with a sharp pencil, what change would appear in the <strong>beaker liquid</strong>?
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <button type="button" class="concept-choice" data-correct="false" style="justify-content: flex-start; text-align: left;">
+                A) Nothing would change because starch molecules are still chemically repelled by water.
+              </button>
+              <button type="button" class="concept-choice" data-correct="true" style="justify-content: flex-start; text-align: left;">
+                B) Large starch molecules would leak out through the hole and react with iodine, turning the beaker liquid blue-black.
+              </button>
+              <button type="button" class="concept-choice" data-correct="false" style="justify-content: flex-start; text-align: left;">
+                C) Glucose would stop diffusing out of the bag completely.
+              </button>
+            </div>
+            <div id="concept-feedback" class="alert-inline" style="display: none; margin-top: 0.5rem;"></div>
+          </div>
+
+          <!-- Handout Section 9 Questions (DOK 3) -->
+          <h3>Post-Lab Analysis Questions (Complete for Your Lab Report)</h3>
+
+          <div class="question-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <label for="ans-q1"><strong>1. Molecules Able to Cross Membrane &amp; Supporting Evidence</strong></label>
+              <span class="dok-badge">DOK 3</span>
+            </div>
+            <p style="font-size: 0.88rem; margin: 0.35rem 0;">
+              Based on your experimental observations, which molecule(s) were able to cross the dialysis tubing membrane? What specific evidence supports your conclusion?
+            </p>
+            <div class="sentence-starter">Sentence starter: "Based on our experimental results, the molecules that crossed the membrane were ____ because ____..."</div>
+            <textarea id="ans-q1" placeholder="Write your claim and cite specific color and glucose test strip evidence..."></textarea>
+            <button type="button" class="btn-hint" data-hint="hint-1" style="margin-top: 0.45rem; min-height: 36px; font-size: 0.82rem;">Need a Hint?</button>
+            <div id="hint-1" class="hint-box">
+              Compare the initial vs. final states of three things: (1) Why did the inside of the bag turn blue-black? (2) Why did the beaker glucose strip change from negative to positive? (3) Why did the bag's mass slightly increase?
+            </div>
+          </div>
+
+          <div class="question-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <label for="ans-q2"><strong>2. Molecules Unable to Cross Membrane &amp; Supporting Evidence</strong></label>
+              <span class="dok-badge">DOK 3</span>
+            </div>
+            <p style="font-size: 0.88rem; margin: 0.35rem 0;">
+              Which molecule(s) were unable to cross the dialysis tubing membrane? What specific evidence supports your conclusion?
+            </p>
+            <div class="sentence-starter">Sentence starter: "The molecule that could not cross the dialysis tubing was ____, which is supported by the observation that ____..."</div>
+            <textarea id="ans-q2" placeholder="Identify the blocked molecule and explain how the beaker color proves it stayed inside..."></textarea>
+            <button type="button" class="btn-hint" data-hint="hint-2" style="margin-top: 0.45rem; min-height: 36px; font-size: 0.82rem;">Need a Hint?</button>
+            <div id="hint-2" class="hint-box">
+              Remember that iodine turns blue-black whenever it contacts starch. Since iodine was already present in the beaker water, what would have happened to the beaker color if starch had escaped?
+            </div>
+          </div>
+
+          <div class="question-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <label for="ans-q3"><strong>3. Connection to Molecular Formulas, Relative Sizes &amp; Pre-Lab Predictions</strong></label>
+              <span class="dok-badge">DOK 3</span>
+            </div>
+            <p style="font-size: 0.88rem; margin: 0.35rem 0;">
+              How do your experimental results relate to the molecular formulas and relative sizes of water (H<sub>2</sub>O), iodine (I<sub>2</sub>), glucose (C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>), and starch (C<sub>300</sub>H<sub>520</sub>O<sub>260</sub>)? Were your pre-lab predictions accurate?
+            </p>
+            <div class="sentence-starter">Sentence starter: "Comparing the chemical formulas shows that smaller molecules like ____ passed through the membrane pores, whereas ____..."</div>
+            <textarea id="ans-q3" placeholder="Compare atom counts/molecular size across all four formulas and evaluate your pre-lab predictions..."></textarea>
+            <button type="button" class="btn-hint" data-hint="hint-3" style="margin-top: 0.45rem; min-height: 36px; font-size: 0.82rem;">Need a Hint?</button>
+            <div id="hint-3" class="hint-box">
+              Look at the total number of atoms in each formula: H₂O (3 atoms), I₂ (2 atoms), and C₆H₁₂O₆ (24 atoms) vs. C₃₀₀H₅₂₀O₂₆₀ (1,080+ atoms). Relate that size difference to the microscopic pores in the tubing.
+            </div>
+          </div>
+
+          <div class="question-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <label for="ans-q4"><strong>4. Dialysis Tubing as a Cell Membrane Model &amp; Limitations</strong></label>
+              <span class="dok-badge">DOK 3</span>
+            </div>
+            <p style="font-size: 0.88rem; margin: 0.35rem 0;">
+              Explain how dialysis tubing serves as a model for biological cell membranes. What is one limitation of using plastic dialysis tubing to represent a living cellular membrane?
+            </p>
+            <div class="sentence-starter">Sentence starter: "Dialysis tubing models a cell membrane because both are ____; however, one limitation is that living cell membranes ____..."</div>
+            <textarea id="ans-q4" placeholder="Explain the similarity (selective permeability/passive diffusion) and a structural/functional difference..."></textarea>
+            <button type="button" class="btn-hint" data-hint="hint-4" style="margin-top: 0.45rem; min-height: 36px; font-size: 0.82rem;">Need a Hint?</button>
+            <div id="hint-4" class="hint-box">
+              Think about what a living phospholipid bilayer has that inert polymer dialysis tubing lacks: transport protein channels/pumps, active transport using ATP, endocytosis/exocytosis, or dynamic responsiveness to signals.
+            </div>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: flex-end; margin-top: 1rem;">
+            <button type="button" id="btn-export-report" class="btn-success">
+              Download Completed Lab Report (.html)
+            </button>
+            <button type="button" id="btn-print-report" class="btn-primary">
+              Print / Save as PDF
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Tooltip Floating Box -->
+  <div id="tooltip-popover" class="tooltip-popover" role="tooltip"></div>
+
+  <!-- Vocab Glossary Modal -->
+  <div id="modal-glossary" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="glossary-title">
+    <div class="modal-dialog">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 id="glossary-title" style="margin: 0;">Biology Lab Vocabulary Glossary</h2>
+        <button type="button" class="close-modal" data-target="modal-glossary">Close</button>
+      </div>
+      <dl id="glossary-list" style="margin-top: 0.75rem;"></dl>
+    </div>
+  </div>
+
+  <!-- Teacher View / Answer Key Modal -->
+  <div id="modal-teacher" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="teacher-title">
+    <div class="modal-dialog">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 id="teacher-title" style="margin: 0;">Teacher Verification &amp; Answer Key</h2>
+        <button type="button" class="close-modal" data-target="modal-teacher">Close</button>
+      </div>
+
+      <div id="teacher-lock-view" style="margin-top: 0.85rem;">
+        <p style="font-size: 0.92rem;">Enter the teacher passcode to unlock expected lab data, grading key, and exemplar responses.</p>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <label for="teacher-passcode" class="sr-only">Teacher Passcode</label>
+          <input type="password" id="teacher-passcode" placeholder="Enter passcode (e.g., BIO2026)" style="max-width: 260px;" />
+          <button type="button" id="btn-unlock-teacher" class="btn-primary">Unlock Key</button>
+        </div>
+        <p id="teacher-error" style="color: var(--danger); font-size: 0.85rem; display: none; margin-top: 0.4rem;">
+          Incorrect passcode. Please check the Teacher Setup Guide.
+        </p>
+      </div>
+
+      <div id="teacher-unlocked-view" style="display: none; margin-top: 0.85rem;">
+        <div class="alert-inline info">
+          <strong>Student Session Variation Check:</strong> Each student receives ±2% to ±5% realistic experimental noise on glucose concentration, color intensity, and osmotic mass gain while preserving exact directional trends.
+        </div>
+
+        <h3>1. Pre-Lab Predictions Key (Section 4)</h3>
+        <ul>
+          <li><strong>Water (H<sub>2</sub>O):</strong> Can Pass (small polar molecule; moves via osmosis into the hypertonic bag)</li>
+          <li><strong>Iodine (I<sub>2</sub>):</strong> Can Pass (small diatomic molecule; diffuses into bag)</li>
+          <li><strong>Glucose (C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>):</strong> Can Pass (small monosaccharide; diffuses out into beaker)</li>
+          <li><strong>Starch (C<sub>300</sub>H<sub>520</sub>O<sub>260</sub>):</strong> Too Large (macromolecular polysaccharide; trapped inside bag)</li>
+        </ul>
+
+        <h3>2. Expected Data Collection Table (Section 8)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Location / Sample</th>
+                <th>Initial Observations</th>
+                <th>Final Observations</th>
+                <th>Permeability Inference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Inside Dialysis Bag (Color)</strong></td>
+                <td>Cloudy white / milky translucent</td>
+                <td>Deep blue-black / dark purple</td>
+                <td>Iodine (I<sub>2</sub>) diffused into the bag and reacted with starch.</td>
+              </tr>
+              <tr>
+                <td><strong>Beaker Liquid (Color)</strong></td>
+                <td>Pale amber / yellow</td>
+                <td>Lighter pale yellow (no blue-black)</td>
+                <td>Starch (C<sub>300</sub>H<sub>520</sub>O<sub>260</sub>) is too large to exit the bag.</td>
+              </tr>
+              <tr>
+                <td><strong>Beaker Glucose Test</strong></td>
+                <td>Negative (0 mg/dL, teal/blue pad)</td>
+                <td>Positive (~450–650 mg/dL, olive/brown pad)</td>
+                <td>Glucose (C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>) diffused out of the bag into the beaker.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3. Post-Lab Analysis Exemplars (Section 9)</h3>
+        <ol style="font-size: 0.9rem; line-height: 1.55;">
+          <li><strong>Molecules crossing membrane:</strong> Iodine (I<sub>2</sub>), glucose (C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>), and water (H<sub>2</sub>O). Evidence: the inside of the bag turned blue-black (showing iodine entered), the beaker glucose strip turned positive (showing glucose exited), and the bag gained mass/turgor (showing water entered via osmosis).</li>
+          <li><strong>Molecules unable to cross:</strong> Starch (C<sub>300</sub>H<sub>520</sub>O<sub>260</sub>). Evidence: the beaker solution contained iodine yet never turned blue-black, proving starch remained trapped inside the dialysis tubing.</li>
+          <li><strong>Relationship to molecular size:</strong> Molecules with few atoms (H<sub>2</sub>O = 3 atoms, I<sub>2</sub> = 2 atoms, C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> = 24 atoms) are smaller than the microscopic pores of the dialysis tubing and diffuse down their concentration gradients. Starch is a massive polysaccharide (~1,080+ atoms) physically blocked by pore size.</li>
+          <li><strong>Cell membrane model &amp; limitation:</strong> Both dialysis tubing and plasma membranes are selectively permeable and allow passive diffusion down concentration gradients. However, dialysis tubing is a non-living polymer that sorts strictly by pore size—it lacks phospholipid bilayers, embedded transport proteins, active transport (ATP pumps), and endocytosis/exocytosis.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* =========================================================
+         1. VOCABULARY DEFINITIONS (Grade-Appropriate Tooltips)
+      ========================================================= */
+      const VOCAB = {
+        "passive diffusion": "The spontaneous movement of molecules from an area of higher concentration to an area of lower concentration without using cellular energy (ATP).",
+        "concentration gradient": "A difference in the concentration of a substance across a space or membrane; molecules naturally diffuse 'down' the gradient from high to low.",
+        "selectively permeable": "Also called semi-permeable; a membrane property that lets small molecules pass through while blocking larger molecules.",
+        "diatomic": "A molecule made of exactly two atoms bonded together, such as iodine (I₂).",
+        "monosaccharide": "A single simple sugar building block (monomer), such as glucose (C₆H₁₂O₆), small enough to cross dialysis pores.",
+        "polysaccharide": "A huge complex carbohydrate polymer made of hundreds of linked sugar units, such as starch (C₃₀₀H₅₂₀O₂₆₀).",
+        "osmosis": "The passive diffusion of water molecules (H₂O) across a selectively permeable membrane toward a region with higher solute concentration."
+      };
+
+      /* =========================================================
+         2. SIMULATION STATE & STUDENT RANDOMIZATION (±2–5%)
+      ========================================================= */
+      function generateNoise(minPct = 0.02, maxPct = 0.05) {
+        const mag = minPct + Math.random() * (maxPct - minPct);
+        const sign = Math.random() < 0.5 ? -1 : 1;
+        return 1 + sign * mag;
+      }
+
+      function createInitialState() {
+        const seedId = "BIO-" + Math.floor(1000 + Math.random() * 9000);
+        return {
+          seedId,
+          noiseGlucose: generateNoise(0.02, 0.05),
+          noiseIodine: generateNoise(0.02, 0.045),
+          noiseOsmosis: generateNoise(0.02, 0.05),
+          predictions: { water: null, iodine: null, glucose: null, starch: null },
+          params: {
+            iodineDrops: 11,
+            glucosePct: 12.5,
+            starchPct: 1.5,
+            targetDuration: 20,
+            rinseBag: true
+          },
+          steps: {
+            beakerReady: false,
+            baselineTested: false,
+            bagReady: false,
+            submerged: false,
+            incubated: false,
+            finalTested: false
+          },
+          elapsedMin: 0,
+          isRunning: false,
+          timerHandle: null,
+          initialMass: 10.50,
+          currentMass: 10.50,
+          baselineGlucoseMgDl: 0,
+          currentBeakerGlucose: 0,
+          bagColorIntensity: 0, // 0 to 100% blue-black complex
+          records: [],
+          poreView: false
+        };
+      }
+
+      let state = createInitialState();
+
+      /* =========================================================
+         3. SCIENTIFIC KINETICS ENGINE
+      ========================================================= */
+      function computeMetricsAtTime(tMin) {
+        const { iodineDrops, glucosePct, starchPct, rinseBag } = state.params;
+
+        // Initial bag mass (~10 mL liquid + ~0.50 g wet tubing)
+        const baseMass = Number((10.48 * state.noiseOsmosis).toFixed(2));
+
+        // 1. Glucose diffusion out of 10 mL bag into 150 mL beaker (total 160 mL)
+        // glucosePct% = glucosePct * 1000 mg/dL inside 10 mL bag
+        const bagInitialMgDl = glucosePct * 1000;
+        const theoreticalEqMgDl = bagInitialMgDl * (10 / 160); // e.g., 12,500 * 10/160 = 781.25 mg/dL
+        const kGlucose = 0.068; // rate constant (min^-1) -> ~74% of equilibrium at 20 min
+        const contamination = rinseBag ? 0 : Math.round(65 * state.noiseGlucose);
+
+        const diffusedGlucose = theoreticalEqMgDl * (1 - Math.exp(-kGlucose * tMin)) * state.noiseGlucose;
+        const beakerGlucose = Math.max(0, Math.round(contamination + diffusedGlucose));
+
+        // 2. Iodine diffusion into bag & starch-iodine blue-black color intensity (0-100%)
+        const iodineFactor = Math.min(1.25, iodineDrops / 11);
+        const starchFactor = Math.min(1.25, starchPct / 1.5);
+        const kIodine = 0.14 * iodineFactor;
+        const rawIntensity = 96 * starchFactor * (1 - Math.exp(-kIodine * tMin)) * state.noiseIodine;
+        const bagIntensity = Math.min(100, Math.max(0, Math.round(rawIntensity)));
+
+        // 3. Osmotic water influx (H2O enters hypertonic bag)
+        const osmoticDrive = (glucosePct / 12.5) * 0.85 + (starchPct / 1.5) * 0.15;
+        const deltaMass = 0.88 * osmoticDrive * (1 - Math.exp(-0.085 * tMin)) * state.noiseOsmosis;
+        const bagMass = Number((baseMass + deltaMass).toFixed(2));
+
+        return {
+          baseMass,
+          bagMass,
+          deltaMass: Number((bagMass - baseMass).toFixed(2)),
+          beakerGlucose,
+          bagIntensity
+        };
+      }
+
+      function glucoseToStripStyle(mgDl) {
+        if (mgDl <= 15) {
+          return { color: "#0ea5e9", label: `Negative (${mgDl} mg/dL • Teal/Blue)` };
+        } else if (mgDl <= 140) {
+          return { color: "#22c55e", label: `Trace Positive (${mgDl} mg/dL • Light Green)` };
+        } else if (mgDl <= 320) {
+          return { color: "#84cc16", label: `Positive (${mgDl} mg/dL • Olive Green)` };
+        } else {
+          return { color: "#a16207", label: `Strong Positive (${mgDl} mg/dL • Brown)` };
+        }
+      }
+
+      function interpolateColor(hex1, hex2, t) {
+        const c1 = parseInt(hex1.slice(1), 16);
+        const c2 = parseInt(hex2.slice(1), 16);
+        const r1 = (c1 >> 16) & 255, g1 = (c1 >> 8) & 255, b1 = c1 & 255;
+        const r2 = (c2 >> 16) & 255, g2 = (c2 >> 8) & 255, b2 = c2 & 255;
+        const r = Math.round(r1 + (r2 - r1) * t);
+        const g = Math.round(g1 + (g2 - g1) * t);
+        const b = Math.round(b1 + (b2 - b1) * t);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+
+      /* =========================================================
+         4. VISUAL RENDERING (SVG LAB APPARATUS & MOLECULES)
+      ========================================================= */
+      function renderMolecules() {
+        const beakerGroup = document.getElementById("svg-molecules-beaker");
+        const bagGroup = document.getElementById("svg-molecules-bag");
+        beakerGroup.innerHTML = "";
+        bagGroup.innerHTML = "";
+
+        if (!state.steps.beakerReady && !state.steps.bagReady) return;
+
+        // Beaker Iodine molecules (amber dots)
+        if (state.steps.beakerReady) {
+          const iodineCount = Math.max(4, Math.round(state.params.iodineDrops * (1 - state.bagColorIntensity / 280)));
+          for (let i = 0; i < iodineCount; i++) {
+            const cx = 128 + ((i * 37) % 164);
+            const cy = 142 + ((i * 53) % 145);
+            // Avoid center if bag submerged
+            if (state.steps.submerged && cx > 172 && cx < 248 && cy > 142 && cy < 278) continue;
+            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            dot.setAttribute("cx", cx);
+            dot.setAttribute("cy", cy);
+            dot.setAttribute("r", "3.2");
+            dot.setAttribute("fill", "#b45309");
+            beakerGroup.appendChild(dot);
+          }
+        }
+
+        // Diffused Glucose molecules in Beaker (green hexagons/circles)
+        if (state.currentBeakerGlucose > 20) {
+          const gCount = Math.min(22, Math.max(2, Math.round(state.currentBeakerGlucose / 32)));
+          for (let i = 0; i < gCount; i++) {
+            const cx = 126 + ((i * 43 + 19) % 168);
+            const cy = 145 + ((i * 61 + 11) % 145);
+            if (state.steps.submerged && cx > 172 && cx < 248 && cy > 142 && cy < 278) continue;
+            const gDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            gDot.setAttribute("cx", cx);
+            gDot.setAttribute("cy", cy);
+            gDot.setAttribute("r", "3.5");
+            gDot.setAttribute("fill", "#16a34a");
+            beakerGroup.appendChild(gDot);
+          }
+        }
+
+        // Inside Bag Molecules (Large coiled Starch chains + Glucose + diffused Iodine)
+        if (state.steps.bagReady) {
+          // Large Starch macromolecules (always trapped inside)
+          const starchChains = [
+            "M188,175 Q198,165 208,175 T228,175",
+            "M185,205 Q198,195 210,205 T232,205",
+            "M188,240 Q200,230 212,240 T230,240"
+          ];
+          starchChains.forEach((d) => {
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", d);
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", state.bagColorIntensity > 35 ? "#93c5fd" : "#ec4899");
+            path.setAttribute("stroke-width", "3");
+            path.setAttribute("stroke-linecap", "round");
+            bagGroup.appendChild(path);
+          });
+        }
+      }
+
+      function updateVisualBench() {
+        const beakerLiquid = document.getElementById("svg-beaker-liquid");
+        const beakerMeniscus = document.getElementById("svg-beaker-meniscus");
+        const bagAssembly = document.getElementById("svg-bag-assembly");
+        const bagFill = document.getElementById("svg-bag-fill");
+        const bagLabel = document.getElementById("svg-bag-label");
+
+        // Beaker liquid color
+        if (!state.steps.beakerReady) {
+          beakerLiquid.setAttribute("fill", "#e2e8f0");
+          beakerLiquid.setAttribute("opacity", "0.25");
+          beakerMeniscus.setAttribute("fill", "#cbd5e1");
+          document.getElementById("readout-beaker-color").textContent = "Empty";
+        } else {
+          // Amber (#f59e0b) shifts slightly lighter (#fde68a) as iodine enters bag
+          const t = Math.min(1, state.bagColorIntensity / 130);
+          const col = interpolateColor("#f59e0b", "#fcd34d", t);
+          beakerLiquid.setAttribute("fill", col);
+          beakerLiquid.setAttribute("opacity", "0.82");
+          beakerMeniscus.setAttribute("fill", "#fef08a");
+          document.getElementById("readout-beaker-color").textContent =
+            state.elapsedMin > 0 ? "Lighter Pale Yellow" : "Pale Amber / Yellow";
+        }
+
+        // Bag position (suspended above vs submerged)
+        bagAssembly.setAttribute("transform", state.steps.submerged ? "translate(0, 0)" : "translate(0, -85)");
+
+        // Bag color (Cloudy white -> Deep Blue-Black)
+        if (!state.steps.bagReady) {
+          bagFill.setAttribute("fill", "#f8fafc");
+          bagFill.setAttribute("fill-opacity", "0.45");
+          bagLabel.textContent = "Empty Bag";
+          bagLabel.setAttribute("fill", "#475569");
+          document.getElementById("readout-bag-color").textContent = "Empty";
+          document.getElementById("readout-mass").textContent = "Not assembled";
+        } else {
+          const tBag = state.bagColorIntensity / 100;
+          const bagCol = interpolateColor("#f1f5f9", "#1e1b4b", tBag);
+          bagFill.setAttribute("fill", bagCol);
+          bagFill.setAttribute("fill-opacity", "0.94");
+          bagLabel.textContent = tBag > 0.35 ? "Blue-Black" : "Starch+Gluc";
+          bagLabel.setAttribute("fill", tBag > 0.35 ? "#ffffff" : "#1e293b");
+
+          document.getElementById("readout-bag-color").textContent =
+            state.bagColorIntensity > 45
+              ? `Blue-Black (${state.bagColorIntensity}%)`
+              : state.bagColorIntensity > 10
+              ? `Turning Dark Blue (${state.bagColorIntensity}%)`
+              : "Cloudy White";
+
+          const deltaStr = state.currentMass > state.initialMass
+            ? ` (+${(state.currentMass - state.initialMass).toFixed(2)} g)`
+            : "";
+          document.getElementById("readout-mass").textContent = `${state.currentMass.toFixed(2)} g${deltaStr}`;
+        }
+
+        document.getElementById("readout-time").textContent =
+          `${String(state.elapsedMin).padStart(2, "0")}:00 / ${String(state.params.targetDuration).padStart(2, "0")}:00 min`;
+
+        renderMolecules();
+      }
+
+      /* =========================================================
+         5. DATA TABLES & GRAPH RENDERING
+      ========================================================= */
+      function updateDataTables() {
+        // Section 8 Handout Data Collection Table
+        const dtBagInit = document.getElementById("dt-bag-init");
+        const dtBagFinal = document.getElementById("dt-bag-final");
+        const dtBeakerInit = document.getElementById("dt-beaker-init");
+        const dtBeakerFinal = document.getElementById("dt-beaker-final");
+        const dtGlucInit = document.getElementById("dt-gluc-init");
+        const dtGlucFinal = document.getElementById("dt-gluc-final");
+
+        dtBagInit.textContent = state.steps.bagReady
+          ? `Cloudy white / milky translucent (Initial mass: ${state.initialMass.toFixed(2)} g)`
+          : "—";
+
+        dtBagFinal.textContent = state.steps.finalTested
+          ? `Deep blue-black / dark indigo (${state.bagColorIntensity}% intensity; Final mass: ${state.currentMass.toFixed(2)} g, +${(state.currentMass - state.initialMass).toFixed(2)} g H₂O)`
+          : "—";
+
+        dtBeakerInit.textContent = state.steps.beakerReady
+          ? `Pale amber / yellow (${state.params.iodineDrops} drops Lugol's iodine in 150 mL H₂O)`
+          : "—";
+
+        dtBeakerFinal.textContent = state.steps.finalTested
+          ? "Lighter pale yellow / amber (Remained clear of blue-black starch reaction)"
+          : "—";
+
+        dtGlucInit.textContent = state.steps.baselineTested
+          ? glucoseToStripStyle(state.baselineGlucoseMgDl).label
+          : "—";
+
+        dtGlucFinal.textContent = state.steps.finalTested
+          ? glucoseToStripStyle(state.currentBeakerGlucose).label
+          : "—";
+
+        // Quantitative Log Table
+        const tbody = document.getElementById("quant-tbody");
+        const tfoot = document.getElementById("quant-tfoot");
+
+        if (state.records.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Run the procedure in Tab 2 to generate timestamped quantitative data.</td></tr>`;
+          tfoot.innerHTML = "";
+        } else {
+          tbody.innerHTML = state.records
+            .map((r) => {
+              const rate = r.time > 0 ? (r.glucose / r.time).toFixed(1) : "0.0";
+              return `<tr>
+                <td><strong>${r.time} min</strong></td>
+                <td>${r.glucose} mg/dL</td>
+                <td>${rate} mg/dL/min</td>
+                <td>${r.intensity}%</td>
+                <td>${r.mass.toFixed(2)} g (+${r.deltaMass.toFixed(2)} g)</td>
+              </tr>`;
+            })
+            .join("");
+
+          const last = state.records[state.records.length - 1];
+          const avgGlucose = (
+            state.records.reduce((acc, r) => acc + r.glucose, 0) / state.records.length
+          ).toFixed(1);
+          const netRate = last.time > 0 ? (last.glucose / last.time).toFixed(2) : "0.00";
+
+          tfoot.innerHTML = `<tr>
+            <td>Summary / Net</td>
+            <td>Mean: ${avgGlucose} mg/dL</td>
+            <td>Net Rate: ${netRate} mg/dL/min</td>
+            <td>Max: ${last.intensity}%</td>
+            <td>Net H₂O Gain: +${last.deltaMass.toFixed(2)} g</td>
+          </tr>`;
+        }
+
+        drawGraph();
+      }
+
+      function drawGraph() {
+        const canvas = document.getElementById("diffusion-canvas");
+        const ctx = canvas.getContext("2d");
+        const W = canvas.width;
+        const H = canvas.height;
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, W, H);
+
+        const padL = 72;
+        const padR = 72;
+        const padT = 48;
+        const padB = 56;
+        const plotW = W - padL - padR;
+        const plotH = H - padT - padB;
+
+        // Title
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 15px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Diffusion Across a Selectively Permeable Dialysis Membrane Over Time", W / 2, 24);
+
+        // Axes Lines
+        ctx.strokeStyle = "#334155";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padL, padT);
+        ctx.lineTo(padL, padT + plotH);
+        ctx.lineTo(padL + plotW, padT + plotH);
+        ctx.lineTo(padL + plotW, padT);
+        ctx.stroke();
+
+        // Grid & Left Y-Axis (Beaker Glucose mg/dL, 0 to 800)
+        const maxGluc = 800;
+        ctx.font = "12px sans-serif";
+        ctx.textAlign = "right";
+        for (let g = 0; g <= maxGluc; g += 200) {
+          const y = padT + plotH - (g / maxGluc) * plotH;
+          ctx.strokeStyle = "#e2e8f0";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(padL, y);
+          ctx.lineTo(padL + plotW, y);
+          ctx.stroke();
+
+          ctx.fillStyle = "#15803d";
+          ctx.fillText(g.toString(), padL - 8, y + 4);
+        }
+
+        // Right Y-Axis (Bag Blue-Black Color Intensity 0 to 100%)
+        ctx.textAlign = "left";
+        for (let p = 0; p <= 100; p += 25) {
+          const y = padT + plotH - (p / 100) * plotH;
+          ctx.fillStyle = "#1d4ed8";
+          ctx.fillText(p + "%", padL + plotW + 8, y + 4);
+        }
+
+        // X-Axis (Time 0 to targetDuration)
+        const maxT = Math.max(20, state.params.targetDuration);
+        ctx.textAlign = "center";
+        for (let t = 0; t <= maxT; t += 5) {
+          const x = padL + (t / maxT) * plotW;
+          ctx.fillStyle = "#334155";
+          ctx.fillText(t + "m", x, padT + plotH + 18);
+        }
+
+        // Axis Titles
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText("Incubation Time (minutes)", padL + plotW / 2, H - 12);
+
+        ctx.save();
+        ctx.translate(18, padT + plotH / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = "#15803d";
+        ctx.fillText("Beaker Glucose (mg/dL)", 0, 0);
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(W - 16, padT + plotH / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillStyle = "#1d4ed8";
+        ctx.fillText("Bag Iodine-Starch Color (%)", 0, 0);
+        ctx.restore();
+
+        // Legend
+        ctx.font = "bold 11px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#15803d";
+        ctx.fillRect(padL + 10, padT + 8, 14, 4);
+        ctx.fillText("Beaker Glucose (mg/dL)", padL + 30, padT + 14);
+
+        ctx.fillStyle = "#1d4ed8";
+        ctx.fillRect(padL + 195, padT + 8, 14, 4);
+        ctx.fillText("Bag Blue-Black Intensity (%)", padL + 215, padT + 14);
+
+        // Plot Points if records exist
+        const pts = [...state.records].sort((a, b) => a.time - b.time);
+        if (pts.length === 0) {
+          ctx.fillStyle = "#64748b";
+          ctx.font = "italic 13px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("Complete the incubation steps to plot your experimental data points.", padL + plotW / 2, padT + plotH / 2);
+          return;
+        }
+
+        // Glucose Line
+        ctx.strokeStyle = "#15803d";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        pts.forEach((pt, idx) => {
+          const x = padL + (pt.time / maxT) * plotW;
+          const y = padT + plotH - (Math.min(maxGluc, pt.glucose) / maxGluc) * plotH;
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // Intensity Line
+        ctx.strokeStyle = "#1d4ed8";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        pts.forEach((pt, idx) => {
+          const x = padL + (pt.time / maxT) * plotW;
+          const y = padT + plotH - (pt.intensity / 100) * plotH;
+          if (idx === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Data Markers
+        pts.forEach((pt) => {
+          const x = padL + (pt.time / maxT) * plotW;
+          const yG = padT + plotH - (Math.min(maxGluc, pt.glucose) / maxGluc) * plotH;
+          const yI = padT + plotH - (pt.intensity / 100) * plotH;
+
+          ctx.fillStyle = "#15803d";
+          ctx.beginPath();
+          ctx.arc(x, yG, 5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#1d4ed8";
+          ctx.beginPath();
+          ctx.rect(x - 4.5, yI - 4.5, 9, 9);
+          ctx.fill();
+        });
+      }
+
+      /* =========================================================
+         6. PROGRESS & GUIDED MODE SYNC
+      ========================================================= */
+      function announce(msg) {
+        document.getElementById("sr-announcer").textContent = msg;
+      }
+
+      function syncProgressAndUI() {
+        const predDone = Object.values(state.predictions).every((v) => v !== null);
+        const analysisDone =
+          document.getElementById("ans-q1").value.trim().length > 12 &&
+          document.getElementById("ans-q2").value.trim().length > 12 &&
+          document.getElementById("ans-q3").value.trim().length > 12 &&
+          document.getElementById("ans-q4").value.trim().length > 12;
+
+        const milestones = {
+          predictions: predDone,
+          beakerSetup: state.steps.beakerReady,
+          baselineTest: state.steps.baselineTested,
+          bagSetup: state.steps.bagReady,
+          incubate: state.steps.incubated,
+          finalTest: state.steps.finalTested,
+          analysis: analysisDone
+        };
+
+        const doneCount = Object.values(milestones).filter(Boolean).length;
+        const pct = Math.round((doneCount / 7) * 100);
+
+        document.getElementById("progress-summary").textContent = `${doneCount} of 7 Milestones Completed (${pct}%)`;
+        document.getElementById("progress-fill").style.width = pct + "%";
+        document.getElementById("progress-bar").setAttribute("aria-valuenow", pct);
+
+        document.querySelectorAll(".step-pill").forEach((pill) => {
+          const key = pill.dataset.step;
+          pill.classList.toggle("done", Boolean(milestones[key]));
+        });
+
+        // Step card status badges
+        document.getElementById("proc-card-1").classList.toggle("completed", state.steps.beakerReady && state.steps.baselineTested);
+        document.getElementById("badge-step-1").textContent =
+          state.steps.beakerReady && state.steps.baselineTested ? "Completed ✓" : "In Progress";
+
+        document.getElementById("proc-card-2").classList.toggle("completed", state.steps.bagReady);
+        document.getElementById("badge-step-2").textContent = state.steps.bagReady ? "Completed ✓" : "Pending";
+
+        document.getElementById("proc-card-3").classList.toggle("completed", state.steps.incubated);
+        document.getElementById("badge-step-3").textContent = state.steps.incubated ? "Completed ✓" : "Pending";
+
+        document.getElementById("proc-card-4").classList.toggle("completed", state.steps.finalTested);
+        document.getElementById("badge-step-4").textContent = state.steps.finalTested ? "Completed ✓" : "Pending";
+
+        // Button Enable/Disable Logic
+        document.getElementById("btn-step1-strip").disabled = !state.steps.beakerReady;
+        document.getElementById("btn-step3-submerge").disabled = !(state.steps.beakerReady && state.steps.baselineTested && state.steps.bagReady) || state.steps.submerged;
+        document.getElementById("btn-step3-run").disabled = !state.steps.submerged || state.isRunning || state.steps.incubated;
+        document.getElementById("btn-step3-snapshot").disabled = !state.steps.submerged;
+        document.getElementById("btn-step4-test").disabled = !state.steps.incubated || state.steps.finalTested;
+        document.getElementById("btn-to-data").disabled = !state.steps.finalTested;
+
+        // Guided Mode Prompt
+        const guidedPrompt = document.getElementById("guided-prompt-text");
+        if (!predDone) {
+          guidedPrompt.textContent = "Step 1: Select 'Can Pass' or 'Too Large' for all 4 substances in the Pre-Lab Predictions table.";
+        } else if (!state.steps.beakerReady) {
+          guidedPrompt.textContent = "Step 2: Go to Tab 2 and click '1A. Fill Beaker & Add Iodine'.";
+        } else if (!state.steps.baselineTested) {
+          guidedPrompt.textContent = "Step 3: Click '1B. Sample Baseline Glucose Strip' to check initial beaker glucose.";
+        } else if (!state.steps.bagReady) {
+          guidedPrompt.textContent = "Step 4: Click '2. Fill, Tie & Prepare Dialysis Bag' (keep the rinse box checked!).";
+        } else if (!state.steps.submerged) {
+          guidedPrompt.textContent = "Step 5: Click '3A. Submerge Bag in Beaker'.";
+        } else if (!state.steps.incubated) {
+          guidedPrompt.textContent = "Step 6: Click '3B. Run Incubation Timer' and wait for diffusion to finish.";
+        } else if (!state.steps.finalTested) {
+          guidedPrompt.textContent = "Step 7: Click '4. Lift Bag & Test Final Beaker Glucose'.";
+        } else if (!analysisDone) {
+          guidedPrompt.textContent = "Final Step: Review your Data Table & Graph in Tab 3, then answer Questions 1–4 in Tab 4.";
+        } else {
+          guidedPrompt.textContent = "All lab milestones complete! Download your Graph and Completed Lab Report.";
+        }
+      }
+
+      /* =========================================================
+         7. PROCEDURE INTERACTION HANDLERS
+      ========================================================= */
+      function recordSnapshot(timeMin) {
+        const m = computeMetricsAtTime(timeMin);
+        const existingIdx = state.records.findIndex((r) => r.time === timeMin);
+        const entry = {
+          time: timeMin,
+          glucose: timeMin === 0 ? state.baselineGlucoseMgDl : m.beakerGlucose,
+          intensity: timeMin === 0 ? 0 : m.bagIntensity,
+          mass: timeMin === 0 ? state.initialMass : m.bagMass,
+          deltaMass: timeMin === 0 ? 0 : m.deltaMass
+        };
+        if (existingIdx >= 0) state.records[existingIdx] = entry;
+        else state.records.push(entry);
+        updateDataTables();
+      }
+
+      function switchTab(tabIndex) {
+        document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+          const active = idx + 1 === tabIndex;
+          btn.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        document.querySelectorAll(".tab-panel").forEach((panel, idx) => {
+          panel.classList.toggle("active", idx + 1 === tabIndex);
+        });
+        if (tabIndex === 3) drawGraph();
+      }
+
+      // Tab buttons
+      [1, 2, 3, 4].forEach((idx) => {
+        document.getElementById(`tab-btn-${idx}`).addEventListener("click", () => switchTab(idx));
+      });
+      document.getElementById("btn-to-procedure").addEventListener("click", () => switchTab(2));
+      document.getElementById("btn-to-data").addEventListener("click", () => switchTab(3));
+
+      // Pre-lab prediction buttons
+      document.querySelectorAll(".pred-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const sub = btn.dataset.sub;
+          const val = btn.dataset.val;
+          state.predictions[sub] = val;
+          document.querySelectorAll(`.pred-btn[data-sub="${sub}"]`).forEach((b) => {
+            b.classList.toggle("selected", b.dataset.val === val);
+          });
+          syncProgressAndUI();
+        });
+      });
+
+      // Parameter sliders
+      document.getElementById("slider-iodine").addEventListener("input", (e) => {
+        state.params.iodineDrops = Number(e.target.value);
+        document.getElementById("val-iodine").textContent = `${state.params.iodineDrops} drops`;
+        document.getElementById("proc-iodine-count").textContent = state.params.iodineDrops;
+      });
+      document.getElementById("slider-glucose").addEventListener("input", (e) => {
+        state.params.glucosePct = Number(e.target.value);
+        document.getElementById("val-glucose").textContent = `${state.params.glucosePct.toFixed(1)}%`;
+      });
+      document.getElementById("slider-starch").addEventListener("input", (e) => {
+        state.params.starchPct = Number(e.target.value);
+        document.getElementById("val-starch").textContent = `${state.params.starchPct.toFixed(1)}%`;
+      });
+      document.getElementById("slider-duration").addEventListener("input", (e) => {
+        state.params.targetDuration = Number(e.target.value);
+        document.getElementById("val-duration").textContent = `${state.params.targetDuration} min`;
+        document.getElementById("btn-step3-run").textContent = `3B. Run Incubation Timer (${state.params.targetDuration} min)`;
+        updateVisualBench();
+      });
+      document.getElementById("chk-rinse").addEventListener("change", (e) => {
+        state.params.rinseBag = e.target.checked;
+      });
+
+      // Step 1A: Fill Beaker
+      document.getElementById("btn-step1-beaker").addEventListener("click", () => {
+        state.steps.beakerReady = true;
+        updateVisualBench();
+        syncProgressAndUI();
+        announce("Beaker filled with 150 milliliters of distilled water and Lugol's iodine, turning pale amber.");
+      });
+
+      // Step 1B: Baseline Glucose Strip
+      document.getElementById("btn-step1-strip").addEventListener("click", () => {
+        state.steps.baselineTested = true;
+        state.baselineGlucoseMgDl = 0;
+        const st = glucoseToStripStyle(0);
+        document.getElementById("strip-initial-pad").style.background = st.color;
+        document.getElementById("strip-initial-text").textContent = `Initial: ${st.label}`;
+
+        // Animate pipette drop
+        const drop = document.getElementById("svg-pipette-drop");
+        drop.setAttribute("r", "4");
+        setTimeout(() => drop.setAttribute("r", "0"), 650);
+
+        updateDataTables();
+        syncProgressAndUI();
+        announce("Baseline beaker glucose tested negative at 0 milligrams per deciliter.");
+      });
+
+      // Step 2: Assemble Bag
+      document.getElementById("btn-step2-bag").addEventListener("click", () => {
+        state.steps.bagReady = true;
+        const initMetrics = computeMetricsAtTime(0);
+        state.initialMass = initMetrics.baseMass;
+        state.currentMass = initMetrics.baseMass;
+        updateVisualBench();
+        updateDataTables();
+        syncProgressAndUI();
+        announce(`Dialysis bag filled with starch and glucose. Initial mass is ${state.initialMass.toFixed(2)} grams.`);
+      });
+
+      // Step 3A: Submerge Bag
+      document.getElementById("btn-step3-submerge").addEventListener("click", () => {
+        state.steps.submerged = true;
+        if (!state.params.rinseBag) {
+          const unwashed = computeMetricsAtTime(0);
+          state.currentBeakerGlucose = unwashed.beakerGlucose;
+        }
+        recordSnapshot(0);
+        updateVisualBench();
+        syncProgressAndUI();
+        announce("Dialysis bag submerged into the beaker.");
+      });
+
+      // Step 3B: Run Incubation Timer (Accelerated 20-min simulation)
+      document.getElementById("btn-step3-run").addEventListener("click", () => {
+        if (state.isRunning) return;
+        state.isRunning = true;
+        syncProgressAndUI();
+        announce("Incubation timer started.");
+
+        const target = state.params.targetDuration;
+        state.timerHandle = setInterval(() => {
+          state.elapsedMin += 1;
+          const m = computeMetricsAtTime(state.elapsedMin);
+          state.currentBeakerGlucose = m.beakerGlucose;
+          state.bagColorIntensity = m.bagIntensity;
+          state.currentMass = m.bagMass;
+
+          // Automatically log every 5-minute interval for a crisp graph
+          if (state.elapsedMin % 5 === 0 || state.elapsedMin === target) {
+            recordSnapshot(state.elapsedMin);
+          }
+
+          updateVisualBench();
+
+          if (state.elapsedMin >= target) {
+            clearInterval(state.timerHandle);
+            state.isRunning = false;
+            state.steps.incubated = true;
+            syncProgressAndUI();
+            announce(`Incubation complete at ${target} minutes. Inside of dialysis bag turned blue-black.`);
+          }
+        }, 240);
+      });
+
+      // Snapshot button
+      document.getElementById("btn-step3-snapshot").addEventListener("click", () => {
+        recordSnapshot(state.elapsedMin);
+        announce(`Recorded data snapshot at ${state.elapsedMin} minutes.`);
+      });
+
+      // Step 4: Lift Bag & Final Glucose Test
+      document.getElementById("btn-step4-test").addEventListener("click", () => {
+        state.steps.submerged = false; // Lift bag out of beaker onto paper towel
+        state.steps.finalTested = true;
+
+        const st = glucoseToStripStyle(state.currentBeakerGlucose);
+        document.getElementById("strip-final-pad").style.background = st.color;
+        document.getElementById("strip-final-text").textContent = `Final: ${st.label}`;
+
+        const drop = document.getElementById("svg-pipette-drop");
+        drop.setAttribute("r", "4");
+        setTimeout(() => drop.setAttribute("r", "0"), 650);
+
+        updateVisualBench();
+        updateDataTables();
+        syncProgressAndUI();
+        announce(`Bag lifted and final beaker sample tested positive for glucose at ${state.currentBeakerGlucose} milligrams per deciliter.`);
+      });
+
+      // Pore Magnifier Toggle
+      document.getElementById("btn-pore-view").addEventListener("click", (e) => {
+        state.poreView = !state.poreView;
+        e.target.setAttribute("aria-pressed", state.poreView ? "true" : "false");
+        e.target.textContent = `Pore Magnifier: ${state.poreView ? "ON" : "OFF"}`;
+        document.getElementById("svg-pore-inset").style.display = state.poreView ? "block" : "none";
+      });
+
+      /* =========================================================
+         8. ACCESSIBILITY, HINTS, EXPORT & TEACHER KEY
+      ========================================================= */
+      // Font Scaling
+      const fontButtons = { "font-sm": "14px", "font-md": "16px", "font-lg": "19px" };
+      Object.entries(fontButtons).forEach(([id, size]) => {
+        document.getElementById(id).addEventListener("click", () => {
+          document.documentElement.style.setProperty("--base-font-size", size);
+          Object.keys(fontButtons).forEach((btnId) => {
+            document.getElementById(btnId).classList.toggle("active", btnId === id);
+          });
+        });
+      });
+
+      // High Contrast Toggle
+      document.getElementById("btn-contrast").addEventListener("click", (e) => {
+        const active = document.body.classList.toggle("high-contrast");
+        e.target.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+
+      // Guided Mode Toggle
+      document.getElementById("btn-guided").addEventListener("click", (e) => {
+        const active = document.body.classList.toggle("guided-mode");
+        e.target.setAttribute("aria-pressed", active ? "true" : "false");
+        syncProgressAndUI();
+      });
+
+      document.getElementById("btn-guided-jump").addEventListener("click", () => {
+        const predDone = Object.values(state.predictions).every((v) => v !== null);
+        if (!predDone) switchTab(1);
+        else if (!state.steps.finalTested) switchTab(2);
+        else switchTab(4);
+      });
+
+      // Tooltips
+      const popover = document.getElementById("tooltip-popover");
+      document.querySelectorAll(".vocab-tip").forEach((tip) => {
+        const showTip = (e) => {
+          const term = tip.dataset.term;
+          if (!VOCAB[term]) return;
+          popover.innerHTML = `<strong>${term}:</strong> ${VOCAB[term]}`;
+          popover.style.display = "block";
+          const rect = tip.getBoundingClientRect();
+          popover.style.left = Math.min(window.innerWidth - 325, Math.max(10, rect.left)) + "px";
+          popover.style.top = Math.min(window.innerHeight - 110, rect.bottom + 8) + "px";
+        };
+        const hideTip = () => { popover.style.display = "none"; };
+        tip.addEventListener("mouseenter", showTip);
+        tip.addEventListener("focus", showTip);
+        tip.addEventListener("mouseleave", hideTip);
+        tip.addEventListener("blur", hideTip);
+      });
+
+      // Glossary Modal
+      const glossaryList = document.getElementById("glossary-list");
+      Object.entries(VOCAB).forEach(([term, def]) => {
+        glossaryList.innerHTML += `<dt style="font-weight:800;margin-top:0.5rem;text-transform:capitalize;">${term}</dt><dd style="margin-left:0;color:var(--text-muted);">${def}</dd>`;
+      });
+      document.getElementById("btn-glossary").addEventListener("click", () => {
+        document.getElementById("modal-glossary").classList.add("open");
+      });
+
+      // Teacher Key Modal
+      document.getElementById("btn-teacher").addEventListener("click", () => {
+        document.getElementById("modal-teacher").classList.add("open");
+      });
+      document.getElementById("btn-unlock-teacher").addEventListener("click", () => {
+        const code = document.getElementById("teacher-passcode").value.trim().toUpperCase();
+        if (code === "BIO2026" || code === "DIALYSIS") {
+          document.getElementById("teacher-lock-view").style.display = "none";
+          document.getElementById("teacher-unlocked-view").style.display = "block";
+          document.getElementById("teacher-error").style.display = "none";
+        } else {
+          document.getElementById("teacher-error").style.display = "block";
+        }
+      });
+
+      document.querySelectorAll(".close-modal").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById(btn.dataset.target).classList.remove("open");
+        });
+      });
+
+      // Hints & Concept Check
+      document.querySelectorAll(".btn-hint").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById(btn.dataset.hint).classList.toggle("visible");
+        });
+      });
+
+      document.querySelectorAll(".concept-choice").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const fb = document.getElementById("concept-feedback");
+          fb.style.display = "block";
+          if (btn.dataset.correct === "true") {
+            fb.className = "alert-inline info";
+            fb.textContent = "Correct! A pinhole bypasses selective permeability, letting large starch polymers escape into the beaker where they react with iodine to turn blue-black.";
+          } else {
+            fb.className = "alert-inline warn";
+            fb.textContent = "Not quite—think about why starch normally stays inside the bag. It is blocked only by microscopic pore size, so a hole lets starch leak into the iodine-filled beaker.";
+          }
+        });
+      });
+
+      ["ans-q1", "ans-q2", "ans-q3", "ans-q4"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", syncProgressAndUI);
+      });
+
+      // Download Graph PNG
+      document.getElementById("btn-download-graph").addEventListener("click", () => {
+        const canvas = document.getElementById("diffusion-canvas");
+        const link = document.createElement("a");
+        link.download = `Dialysis_Permeability_Graph_${state.seedId}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      // Export Completed Lab Report
+      document.getElementById("btn-export-report").addEventListener("click", () => {
+        const graphImg = document.getElementById("diffusion-canvas").toDataURL("image/png");
+        const reportHtml = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Lab Report - ${state.seedId}</title>
+<style>body{font-family:Arial,sans-serif;max-width:850px;margin:2rem auto;line-height:1.5;color:#111}
+table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #444;padding:8px;text-align:left}
+th{background:#eee}img{max-width:100%;border:1px solid #ccc}</style></head>
+<body>
+<h1>Lab Report: Investigating Selective Permeability using Dialysis Tubing</h1>
+<p><strong>Session ID:</strong> ${state.seedId} | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+<h2>1. Pre-Lab Predictions</h2>
+<ul>
+  <li>Water (H₂O): ${state.predictions.water || "Not answered"}</li>
+  <li>Iodine (I₂): ${state.predictions.iodine || "Not answered"}</li>
+  <li>Glucose (C₆H₁₂O₆): ${state.predictions.glucose || "Not answered"}</li>
+  <li>Starch (C₃₀₀H₅₂₀O₂₆₀): ${state.predictions.starch || "Not answered"}</li>
+</ul>
+<h2>2. Student Data Collection Table</h2>
+<table>
+  <tr><th>Location / Sample</th><th>Initial Observations</th><th>Final Observations</th><th>Permeability Inference</th></tr>
+  <tr><td>Inside Dialysis Bag</td><td>${document.getElementById("dt-bag-init").textContent}</td><td>${document.getElementById("dt-bag-final").textContent}</td><td>${document.getElementById("inf-bag").selectedOptions[0].text}</td></tr>
+  <tr><td>Beaker Liquid</td><td>${document.getElementById("dt-beaker-init").textContent}</td><td>${document.getElementById("dt-beaker-final").textContent}</td><td>${document.getElementById("inf-beaker").selectedOptions[0].text}</td></tr>
+  <tr><td>Beaker Glucose Test</td><td>${document.getElementById("dt-gluc-init").textContent}</td><td>${document.getElementById("dt-gluc-final").textContent}</td><td>${document.getElementById("inf-gluc").selectedOptions[0].text}</td></tr>
+</table>
+<h2>3. Diffusion Kinetics Graph</h2>
+<img src="${graphImg}" alt="Diffusion Graph" />
+<h2>4. Post-Lab Analysis Responses</h2>
+<p><strong>Q1 (Molecules crossing membrane):</strong><br>${document.getElementById("ans-q1").value || "(Blank)"}</p>
+<p><strong>Q2 (Molecules unable to cross):</strong><br>${document.getElementById("ans-q2").value || "(Blank)"}</p>
+<p><strong>Q3 (Molecular formulas & size):</strong><br>${document.getElementById("ans-q3").value || "(Blank)"}</p>
+<p><strong>Q4 (Model & limitations):</strong><br>${document.getElementById("ans-q4").value || "(Blank)"}</p>
+</body></html>`;
+
+        const blob = new Blob([reportHtml], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Selective_Permeability_Lab_Report_${state.seedId}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      document.getElementById("btn-print-report").addEventListener("click", () => window.print());
+
+      // Reset Lab
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        if (state.timerHandle) clearInterval(state.timerHandle);
+        state = createInitialState();
+        document.getElementById("session-seed-display").textContent = state.seedId;
+        document.querySelectorAll(".pred-btn").forEach((b) => b.classList.remove("selected"));
+        document.getElementById("strip-initial-pad").style.background = "#cbd5e1";
+        document.getElementById("strip-initial-text").textContent = "Initial: Untested";
+        document.getElementById("strip-final-pad").style.background = "#cbd5e1";
+        document.getElementById("strip-final-text").textContent = "Final: Untested";
+        ["inf-bag", "inf-beaker", "inf-gluc"].forEach((id) => (document.getElementById(id).value = ""));
+        ["ans-q1", "ans-q2", "ans-q3", "ans-q4"].forEach((id) => (document.getElementById(id).value = ""));
+        switchTab(1);
+        updateVisualBench();
+        updateDataTables();
+        syncProgressAndUI();
+        announce("Lab simulation reset with a new randomized student dataset.");
+      });
+
+      // Initialize
+      document.getElementById("session-seed-display").textContent = state.seedId;
+      updateVisualBench();
+      updateDataTables();
+      syncProgressAndUI();
+    })();
+  </script>
+</body>
+</html>
